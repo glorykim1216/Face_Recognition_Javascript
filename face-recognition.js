@@ -92,16 +92,16 @@ video.addEventListener('play', () => {
     console.log("4:", point47 - point45) // 범위 0.035~0.045
 
     // TEST_CODE - Text 출력
-    var ctx = canvas.getContext('2d');
-    ctx.font = '20px gothic';
-    ctx.fillStyle = "rgba(255,0,0,1)";
+    //var ctx = canvas.getContext('2d');
+    //ctx.font = '20px gothic';
+    //ctx.fillStyle = "rgba(255,0,0,1)";
     var isSleep;
     if ((point42 - point38) < 0.038 && (point41 - point39) < 0.043 && (point48 - point44) < 0.039 && (point47 - point45) < 0.043)  // Point 사이거리
     {
-      isSleep = 'sleep';
+      isSleep = true;
     }
     else {
-      isSleep = 'None';
+      isSleep = false;
     }
     //ctx.fillText(isSleep, 50, 50);
     console.log(isSleep)
