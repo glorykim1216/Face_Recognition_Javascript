@@ -31,9 +31,9 @@ video.addEventListener('play', () => {
     const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceExpressions()
     const resizedDetections = faceapi.resizeResults(detections, displaySize)
     canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height) // 캔버스를 지우고 아래서 다시 그림
-    faceapi.draw.drawDetections(canvas, resizedDetections)
-    faceapi.draw.drawFaceLandmarks(canvas, resizedDetections)
-    //faceapi.draw.drawFaceExpressions(canvas, resizedDetections) // 표정 출력
+    faceapi.draw.drawDetections(canvas, resizedDetections)  // 박스 출력
+    faceapi.draw.drawFaceLandmarks(canvas, resizedDetections) // 점 출력
+    faceapi.draw.drawFaceExpressions(canvas, resizedDetections) // 표정 출력
 
     // 안면인식 예외처리
     if (resizedDetections[0] == null) {
@@ -111,7 +111,7 @@ video.addEventListener('play', () => {
       url: '/server',
       dataType: 'json',
       type: 'GET',
-      data: { expression: expression[num], sleep: isSleep },
+      data: { expression: expression[num], sleep: isSleep },  // 서버에 넘겨줄 변수
       success: function (result) {
         if (result) {
           $('#get_output').html(result.result);

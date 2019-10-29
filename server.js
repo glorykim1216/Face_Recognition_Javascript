@@ -48,6 +48,7 @@ console.log("Server Created...");
 // face-recognition.js에서 안면인식 데이터 받음
 app.get('/server', function (req, res) {
 
+    // 클라이언트(face-recognition.js)에서 변수 넘겨받음
     var dataExpression = req.query.expression;
     var dataSleep = req.query.sleep;
 
