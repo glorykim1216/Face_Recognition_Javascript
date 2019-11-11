@@ -124,6 +124,7 @@ var interval;
 function onConnect(socket)
 {
     console.log('TCP Socket is Open!');
+    clearTimeout(openSocket);
 }
 
 function onError(socket){
