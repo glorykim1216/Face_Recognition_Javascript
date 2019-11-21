@@ -26,8 +26,8 @@ video.addEventListener('play', () => {
   const displaySize = { width: video.width, height: video.height }
   faceapi.matchDimensions(canvas, displaySize)
 
-  canvas.getContext('2d').scale(-1, 1);                 // 화면 좌우 반전(mirror), x 값 -1           => faceapi canvas
-  canvas.getContext('2d').translate(-canvas.width, 0);  // 화면 좌우 반전(mirror), 캔버스 위치 이동   => faceapi canvas
+  //canvas.getContext('2d').scale(-1, 1);                 // 화면 좌우 반전(mirror), x 값 -1           => faceapi canvas
+  //canvas.getContext('2d').translate(-canvas.width, 0);  // 화면 좌우 반전(mirror), 캔버스 위치 이동   => faceapi canvas
 
   // 얼굴인식 데이터 출력
   setInterval(async () => {
@@ -75,7 +75,7 @@ video.addEventListener('play', () => {
         num = i;
       }
     }
-    console.log(expression[num]);
+    //console.log(expression[num]);
 
     // 졸음
     // Point Y좌표를 비교하여 체크
@@ -90,10 +90,10 @@ video.addEventListener('play', () => {
     var point45 = resizedDetections[0].unshiftedLandmarks._positions[44]._y / resizedDetections[0].unshiftedLandmarks._imgDims._height;
     var point47 = resizedDetections[0].unshiftedLandmarks._positions[46]._y / resizedDetections[0].unshiftedLandmarks._imgDims._height;
 
-    console.log("1:", point42 - point38) // 범위 0.032~0.04
-    console.log("2:", point41 - point39) // 범위 0.034~0.045
-    console.log("3:", point48 - point44) // 범위 0.029~0.041
-    console.log("4:", point47 - point45) // 범위 0.035~0.045
+    //console.log("1:", point42 - point38) // 범위 0.032~0.04
+    //console.log("2:", point41 - point39) // 범위 0.034~0.045
+    //console.log("3:", point48 - point44) // 범위 0.029~0.041
+    //console.log("4:", point47 - point45) // 범위 0.035~0.045
 
     // TEST_CODE - Text 출력
     //var ctx = canvas.getContext('2d');
@@ -102,13 +102,16 @@ video.addEventListener('play', () => {
     var isSleep;
     if ((point42 - point38) < 0.038 && (point41 - point39) < 0.043 && (point48 - point44) < 0.039 && (point47 - point45) < 0.043)  // Point 사이거리
     {
-      isSleep = true;
+      if (num != 0)
+        isSleep = false;
+      else
+        isSleep = true;
     }
     else {
       isSleep = false;
     }
     //ctx.fillText(isSleep, 50, 50);
-    console.log(isSleep)
+    //console.log(isSleep)
 
     // jQuery 서버와 통신
     $.ajax({
