@@ -26,10 +26,14 @@ video.addEventListener('play', () => {
   const displaySize = { width: video.width, height: video.height }
   faceapi.matchDimensions(canvas, displaySize)
 
+  canvas.getContext('2d').scale(-1, 1);                 // 화면 좌우 반전(mirror), x 값 -1           => faceapi canvas
+  canvas.getContext('2d').translate(-canvas.width, 0);  // 화면 좌우 반전(mirror), 캔버스 위치 이동   => faceapi canvas
+
   // 얼굴인식 데이터 출력
   setInterval(async () => {
     const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceExpressions()
     const resizedDetections = faceapi.resizeResults(detections, displaySize)
+
     canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height) // 캔버스를 지우고 아래서 다시 그림
     faceapi.draw.drawDetections(canvas, resizedDetections)  // 박스 출력
     faceapi.draw.drawFaceLandmarks(canvas, resizedDetections) // 점 출력
