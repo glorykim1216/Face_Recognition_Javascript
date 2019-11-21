@@ -1,11 +1,12 @@
 /*
  * 웹 서버에 html 파일 서비스
  */
+var config = require('./config');                   // config 파일
+var importChannel = config.importChannel;           // GDs ImportChannel
+var TCP_Port = parseInt(config.TCP_Port);           // GDs TCP Port
+var HTTP_port = parseInt(config.HTTP_port);         // 클라이언트-서버 웹 통신 port
+var eyesCloseTime = parseInt(config.eyesCloseTime); // Sleep 상태 체크 (눈 감고있는 시간)
 
-// GDs ImportChannel
-var importChannel = '111';
-var TCP_Port = 6800;
-var HTTP_port = 8888;
 // dictionary
 var dicExpression = {};
 dicExpression['null'] = '0';
@@ -79,7 +80,7 @@ function faceDate(_dataExpression, _dataSleep) {
 
     if(_dataSleep == 'true') {
         if (timeoutObj == null && isSleeping == false) {
-            timeoutObj = setTimeout(checkSleeping, 1500);   // 타이머를 이용하여 Sleep 체크
+            timeoutObj = setTimeout(checkSleeping, eyesCloseTime);   // 타이머를 이용하여 Sleep 체크
         }
     }
     else if (_dataSleep == 'false') {
