@@ -100,7 +100,7 @@ video.addEventListener('play', () => {
     //ctx.font = '20px gothic';
     //ctx.fillStyle = "rgba(255,0,0,1)";
     var isSleep;
-    if ((point42 - point38) < 0.038 && (point41 - point39) < 0.043 && (point48 - point44) < 0.039 && (point47 - point45) < 0.043)  // Point 사이거리
+    if ((point42 - point38) < 0.035 && (point41 - point39) < 0.04 && (point48 - point44) < 0.035 && (point47- point45) < 0.04)  // Point 사이거리
     {
       if (num != 0)
         isSleep = false;

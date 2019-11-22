@@ -100,6 +100,7 @@ function faceDate(_dataExpression, _dataSleep) {
 function checkSleeping() {
     isSleeping = true;
     timeoutObj = null;
+	sendExpression = 'sleep';
     sendData('sleep');// 서버에 데이터 전송
 }
 
