@@ -62,30 +62,22 @@ var timeoutObj = null;
 var sendExpression;
 var isSleeping = false;
 function faceDate(_dataExpression, _dataSleep) {
-    
-    // 안면인식 실패 or neutral, happy, sad 이외에 데이터가 들어올 경우 return;
-    if(_dataExpression == 'null') {
-        if(sendExpression != _dataExpression) {
-            if (timeoutObj != null) {
-                clearTimeout(timeoutObj);
-                timeoutObj = null;
-            }
-            sendExpression = _dataExpression;
-            sendData(_dataExpression); // 서버에 데이터 전송
-        }
+    // 안면인식 데이터(null, neutral, happy, sad, sleep) 이외 값이 들어올 경우 return 
+    if(_dataExpression in dicExpression == false)
         return;
-    }
-    else if(_dataExpression in dicExpression == false)
-        return;
-
-    if(_dataSleep == 'true') {
+    // neutral 상태에서만 졸음 인식
+    else if(_dataExpression == 'neutral' && _dataSleep == 'true')
+    {
         if (timeoutObj == null && isSleeping == false) {
             timeoutObj = setTimeout(checkSleeping, eyesCloseTime);   // 타이머를 이용하여 Sleep 체크
         }
     }
-    else if (_dataSleep == 'false') {
+    // 그외 상태에서는 졸음 인식 X
+    else
+    {
         isSleeping = false;
-        if (timeoutObj != null) {
+        if (timeoutObj != null) 
+        {
             clearTimeout(timeoutObj);
             timeoutObj = null;
         }
@@ -93,15 +85,15 @@ function faceDate(_dataExpression, _dataSleep) {
 
     if(sendExpression != _dataExpression && isSleeping == false) {
         sendExpression = _dataExpression;
-        sendData(_dataExpression); // 서버에 데이터 전송
+        sendData(sendExpression); // 서버에 데이터 전송
     }
 }
 
 function checkSleeping() {
     isSleeping = true;
     timeoutObj = null;
-	sendExpression = 'sleep';
-    sendData('sleep');// 서버에 데이터 전송
+    sendExpression = 'sleep';
+    sendData(sendExpression);// 서버에 데이터 전송
 }
 
 // TCP 서버에 데이터 전송
@@ -112,7 +104,7 @@ function sendData(data) {
     socket.write(sendMessage);
 }
 
-/////////////////////////////// TCP 클라이언트
+///////////////////////////// TCP 클라이언트
 var net = require('net');
 var socket;
 function openSocket(){

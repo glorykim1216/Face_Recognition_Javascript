@@ -31,6 +31,7 @@ video.addEventListener('play', () => {
 
   // 얼굴인식 데이터 출력
   setInterval(async () => {
+
     const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceExpressions()
     const resizedDetections = faceapi.resizeResults(detections, displaySize)
 
@@ -58,14 +59,17 @@ video.addEventListener('play', () => {
     }
 
     // 표정 -> "neutral","happy","sad","angry","fearful","disgusted","surprised"
-    var array = [resizedDetections[0].expressions.neutral,
+    var array = [
+    resizedDetections[0].expressions.neutral,
     resizedDetections[0].expressions.happy,
     resizedDetections[0].expressions.sad,
     resizedDetections[0].expressions.angry,
     resizedDetections[0].expressions.fearful,
     resizedDetections[0].expressions.disgusted,
-    resizedDetections[0].expressions.surprised];
+    resizedDetections[0].expressions.surprised
+    ];
 
+    // 가장 수치가 높은 표정을 num에 저장
     var expression = ["neutral", "happy", "sad", "angry", "fearful", "disgusted", "surprised"];
     var num;
     var max = 0;
@@ -77,41 +81,34 @@ video.addEventListener('play', () => {
     }
     //console.log(expression[num]);
 
-    // 졸음
-    // Point Y좌표를 비교하여 체크
+    // 졸음 체크
+    var landmarks = resizedDetections[0].unshiftedLandmarks;
+
     // 왼쪽 눈(화면기준)
-    var point38 = resizedDetections[0].unshiftedLandmarks._positions[37]._y / resizedDetections[0].unshiftedLandmarks._imgDims._height;
-    var point42 = resizedDetections[0].unshiftedLandmarks._positions[41]._y / resizedDetections[0].unshiftedLandmarks._imgDims._height;
-    var point39 = resizedDetections[0].unshiftedLandmarks._positions[38]._y / resizedDetections[0].unshiftedLandmarks._imgDims._height;
-    var point41 = resizedDetections[0].unshiftedLandmarks._positions[40]._y / resizedDetections[0].unshiftedLandmarks._imgDims._height;
+    var leftEye = EyeAspectRatio(landmarks.getLeftEye());
+    console.log("earLeft : ", leftEye); // 범위 0.25~0.35
     // 오른쪽 눈(화면기준)
-    var point44 = resizedDetections[0].unshiftedLandmarks._positions[43]._y / resizedDetections[0].unshiftedLandmarks._imgDims._height;
-    var point48 = resizedDetections[0].unshiftedLandmarks._positions[47]._y / resizedDetections[0].unshiftedLandmarks._imgDims._height;
-    var point45 = resizedDetections[0].unshiftedLandmarks._positions[44]._y / resizedDetections[0].unshiftedLandmarks._imgDims._height;
-    var point47 = resizedDetections[0].unshiftedLandmarks._positions[46]._y / resizedDetections[0].unshiftedLandmarks._imgDims._height;
+    var rightEye = EyeAspectRatio(landmarks.getRightEye());
+    console.log("earRight : ", rightEye); // 범위 0.25~0.35
 
-    //console.log("1:", point42 - point38) // 범위 0.032~0.04
-    //console.log("2:", point41 - point39) // 범위 0.034~0.045
-    //console.log("3:", point48 - point44) // 범위 0.029~0.041
-    //console.log("4:", point47 - point45) // 범위 0.035~0.045
+    // 얼굴 기울기(Outline 끝점)
+    var outLine = landmarks.getJawOutline();
+    var x = Math.abs(outLine[0]._x - outLine[16]._x);
+    var y = Math.abs(outLine[0]._y - outLine[16]._y);
+    var slope = y / x;
 
+    console.log("slope : ",slope);
     // TEST_CODE - Text 출력
     //var ctx = canvas.getContext('2d');
     //ctx.font = '20px gothic';
     //ctx.fillStyle = "rgba(255,0,0,1)";
-    var isSleep;
-    if ((point42 - point38) < 0.035 && (point41 - point39) < 0.04 && (point48 - point44) < 0.035 && (point47- point45) < 0.04)  // Point 사이거리
+    var isSleep = false;
+    if (leftEye < 0.30 && rightEye < 0.30 && slope > 0.1 )  // neutral 상태 & 눈크기 & 얼굴 기울기
     {
-      if (num != 0)
-        isSleep = false;
-      else
-        isSleep = true;
-    }
-    else {
-      isSleep = false;
+      isSleep = true;
     }
     //ctx.fillText(isSleep, 50, 50);
-    //console.log(isSleep)
+    console.log("isSleep : ",isSleep)
 
     // jQuery 서버와 통신
     $.ajax({
@@ -129,3 +126,23 @@ video.addEventListener('play', () => {
   }, 100)
 
 })
+
+// EAR(eye aspect ratio) 눈 가로세로비
+function EyeAspectRatio(eye) {
+  // faceLandmark68 ex) 왼쪽눈 37 = eye[0], 38 = eye[1], 39 = eye[2], 40 = eye[3], 41 = eye[4], 42 = eye[5]
+
+  var x1 = (eye[1]._x - eye[5]._x);
+  var y1 = (eye[1]._y - eye[5]._y);
+  var distance1 = Math.sqrt(x1*x1 + y1*y1);
+
+  var x2 = (eye[2]._x - eye[4]._x);
+  var y2 = (eye[2]._y - eye[4]._y);
+  var distance2 = Math.sqrt(x2*x2 + y2*y2);
+
+  var x3 = (eye[0]._x - eye[3]._x);
+  var y3 = (eye[0]._y - eye[3]._y);
+  var distance3 = Math.sqrt(x3*x3 + y3*y3);
+
+  var EAR = (distance1 + distance2) / (distance3 * 2);  // EAR(eye aspect ratio)
+  return EAR;
+}
