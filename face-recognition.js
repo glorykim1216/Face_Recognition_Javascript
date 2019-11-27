@@ -26,8 +26,8 @@ video.addEventListener('play', () => {
   const displaySize = { width: video.width, height: video.height }
   faceapi.matchDimensions(canvas, displaySize)
 
-  //canvas.getContext('2d').scale(-1, 1);                 // 화면 좌우 반전(mirror), x 값 -1           => faceapi canvas
-  //canvas.getContext('2d').translate(-canvas.width, 0);  // 화면 좌우 반전(mirror), 캔버스 위치 이동   => faceapi canvas
+  canvas.getContext('2d').scale(-1, 1);                 // 화면 좌우 반전(mirror), x 값 -1           => faceapi canvas
+  canvas.getContext('2d').translate(-canvas.width, 0);  // 화면 좌우 반전(mirror), 캔버스 위치 이동   => faceapi canvas
 
   // 얼굴인식 데이터 출력
   setInterval(async () => {
@@ -38,7 +38,7 @@ video.addEventListener('play', () => {
     canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height) // 캔버스를 지우고 아래서 다시 그림
     faceapi.draw.drawDetections(canvas, resizedDetections)  // 박스 출력
     faceapi.draw.drawFaceLandmarks(canvas, resizedDetections) // 점 출력
-    faceapi.draw.drawFaceExpressions(canvas, resizedDetections) // 표정 출력
+    //faceapi.draw.drawFaceExpressions(canvas, resizedDetections) // 표정 출력
 
     // 안면인식 예외처리
     if (resizedDetections[0] == null) {
@@ -97,7 +97,7 @@ video.addEventListener('play', () => {
     var y = Math.abs(outLine[0]._y - outLine[16]._y);
     var slope = y / x;
 
-    console.log("slope : ",slope);
+    //console.log("slope : ",slope);
     // TEST_CODE - Text 출력
     //var ctx = canvas.getContext('2d');
     //ctx.font = '20px gothic';
@@ -108,7 +108,7 @@ video.addEventListener('play', () => {
       isSleep = true;
     }
     //ctx.fillText(isSleep, 50, 50);
-    console.log("isSleep : ",isSleep)
+    //console.log("isSleep : ",isSleep)
 
     // jQuery 서버와 통신
     $.ajax({

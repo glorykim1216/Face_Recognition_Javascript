@@ -65,15 +65,13 @@ function faceDate(_dataExpression, _dataSleep) {
     // 안면인식 데이터(null, neutral, happy, sad, sleep) 이외 값이 들어올 경우 return 
     if(_dataExpression in dicExpression == false)
         return;
-    // neutral 상태에서만 졸음 인식
-    else if(_dataExpression == 'neutral' && _dataSleep == 'true')
+
+	if(_dataSleep == 'true')
     {
         if (timeoutObj == null && isSleeping == false) {
             timeoutObj = setTimeout(checkSleeping, eyesCloseTime);   // 타이머를 이용하여 Sleep 체크
         }
-    }
-    // 그외 상태에서는 졸음 인식 X
-    else
+    }else
     {
         isSleeping = false;
         if (timeoutObj != null) 
